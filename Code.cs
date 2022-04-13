@@ -10,7 +10,6 @@ class Code{
     private static bool _continue = true;
     private static CodeData? define = null;
     private static List<CodeData> loopPos = new List<CodeData>();
-    int a;
 
     public static int Run(char[] str, int index, int _case){
         if(_continue){
