@@ -1,0 +1,15 @@
+C:\Users\kowat\Desktop\Program\csharp\rsdr\bin\Debug\net6.0\rsdr.exe
+C:\Users\kowat\Desktop\Program\csharp\rsdr\bin\Debug\net6.0\rsdr.deps.json
+C:\Users\kowat\Desktop\Program\csharp\rsdr\bin\Debug\net6.0\rsdr.runtimeconfig.json
+C:\Users\kowat\Desktop\Program\csharp\rsdr\bin\Debug\net6.0\rsdr.dll
+C:\Users\kowat\Desktop\Program\csharp\rsdr\bin\Debug\net6.0\rsdr.pdb
+C:\Users\kowat\Desktop\Program\csharp\rsdr\obj\Debug\net6.0\rsdr.csproj.AssemblyReference.cache
+C:\Users\kowat\Desktop\Program\csharp\rsdr\obj\Debug\net6.0\rsdr.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\kowat\Desktop\Program\csharp\rsdr\obj\Debug\net6.0\rsdr.AssemblyInfoInputs.cache
+C:\Users\kowat\Desktop\Program\csharp\rsdr\obj\Debug\net6.0\rsdr.AssemblyInfo.cs
+C:\Users\kowat\Desktop\Program\csharp\rsdr\obj\Debug\net6.0\rsdr.csproj.CoreCompileInputs.cache
+C:\Users\kowat\Desktop\Program\csharp\rsdr\obj\Debug\net6.0\rsdr.dll
+C:\Users\kowat\Desktop\Program\csharp\rsdr\obj\Debug\net6.0\refint\rsdr.dll
+C:\Users\kowat\Desktop\Program\csharp\rsdr\obj\Debug\net6.0\rsdr.pdb
+C:\Users\kowat\Desktop\Program\csharp\rsdr\obj\Debug\net6.0\rsdr.genruntimeconfig.cache
+C:\Users\kowat\Desktop\Program\csharp\rsdr\obj\Debug\net6.0\ref\rsdr.dll
