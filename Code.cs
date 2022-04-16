@@ -5,56 +5,46 @@ class Code{
 
     private static char[] op = { '+', '-', '*', '/'};
     private static int line = 0;
-    private static int bias = 0;
+    private static int row = 0;
     private static bool successed = true;
     private static bool _continue = true;
-    private static CodeData? define = null;
+
+    private static CodeData? codeNowPos = null;
+    private static CodeData? definePos = null;
+//    private static bool isInDefine = false;
     private static List<CodeData> loopPos = new List<CodeData>();
-
-    public static int Run(char[] str, int index, int _case){
+    public static int Run(char str, int index, int _case){
+        
+        
         if(_continue){
-            int strlen = str.Length;
-            if(exist(str, index) && arg != null){
-                bias = index;
-                char s = str[bias];
-
+            if(arg != null){
+                char[] chars = arg[line].ToCharArray();
+                row = index;
                 
                 if(_case == 0){
-                    bool preOp = (expect(str, bias - 1, op))? true: false;
-                    switch(s){
+                    bool preOp = (expect(str,  op))? true: false;
+                    switch(str){
                         case ' ':
                         break;
                         case '+':
     //                    return (expect(str, index + 1, '+', '-'))? 1 + Code.Run(str, index + 1, 1) : 1;
                         rsdr.Plus();
-                        if(expect(str, bias + 1, op)){
-                            Code.Run(str, bias + 1, 0);
-                        }
-                        if(preOp) return 0;
+                        if(preOp) break;
                         break;
                         case '-':
     //                    return (expect(str, index + 1, '+', '-'))? -1 + Code.Run(str, index + 1, 1) : -1;
                         rsdr.Minus();
-                        if(expect(str, bias + 1, op)){
-                            Code.Run(str, bias + 1, 0);
-                        }
-                        if(preOp) return 0;
+                        if(preOp) break;
                         break;
                         case '*':
     //                    return (expect(str, index + 1, '+', '-'))? 1 + Code.Run(str, index + 1, 1) : 1;
                         rsdr.Mult();
-                        if(expect(str, bias + 1, op)){
-                            Code.Run(str, bias + 1, 0);
-                        }
-                        if(preOp) return 0;
+                        if(preOp) break;
                         break;
                         case '/':
     //                    return (expect(str, index + 1, '+', '-'))? -1 + Code.Run(str, index + 1, 1) : -1;
                         rsdr.Div();
-                        if(expect(str, bias + 1, op)){
-                            Code.Run(str, bias + 1, 0);
-                        }
-                        if(preOp) return 0;
+                        if(preOp) break;
                         break;
                         case '=':
                         rsdr.Set(0);
@@ -80,7 +70,7 @@ class Code{
                         case '[':
                         {
                             if(rsdr.Get() > 0){
-                                loopPos.Add(new CodeData( line, bias));
+                                loopPos.Add(new CodeData( line, row));
                                 int count = loopPos.Count;
                                 if(count > 1){
                                     if(loopPos[count - 2].getRow() == loopPos[count - 1].getRow()){
@@ -89,12 +79,12 @@ class Code{
                                 }
                             }else{
                                 int co = 0;
-                                for(int i = 1; exist(str, i + bias); i++){
-                                    if(expect(str[bias + i], '[')){
+                                for(int i = 1; exist(chars, i + row); i++){
+                                    if(expect(chars[row + i], '[')){
                                         co++;
-                                    }else if(expect(str[bias + i], ']')){
+                                    }else if(expect(chars[row + i], ']')){
                                         if(co == 0){
-                                            bias = bias + i;
+                                            row = row + i;
                                             break;
                                         }
                                         co--;
@@ -110,135 +100,104 @@ class Code{
                             int looptime = 0;
                             if(count > 0){
                                 if(rsdr.Get() > 0){
-                                    Code.Run(str, loopPos[count - 1].getRow(), 0);
+//                                    System.Console.WriteLine("loop");
+                                    row = loopPos[count - 1].getRow() - 1;
                                 }
                                 looptime = loopPos[count - 1].getLoopTime();
                                 loopPos.RemoveAt( count - 1);
                                 
-                                if(looptime > 0) return 0;
+                                if(looptime > 0) break;;
                             }else{
-                                fault(str, line , bias, "require [");
+                                fault(chars, line , row, "require [");
                             }
                         }
                         break;
                         case '!':
-                        if(bias == 0){
-                            if(define == null){
-                                define = new CodeData(line, bias);
-//                                Console.WriteLine(line+" "+bias);
+                        if(row == 0){
+                            if(definePos == null){
+                                definePos = new CodeData(line, row);
+//                                Console.WriteLine(line+" "+row);
                             
                             }
                             else{
-                                define.setLine(line);
-                                define.setRow(bias);
- //                               Console.WriteLine(line+" "+bias);
+                                definePos.setLine(line);
+                                definePos.setRow(row);
+ //                               Console.WriteLine(line+" "+row);
 
                             }
                         }
-                        return 0;
+                        line++;
+                        row = -1;
+                        break;
                         case ':':
-                        if(define != null){
-                            int _bias = bias;
-                            Code.Run( arg[define.getLine()].ToCharArray(), define.getRow() + 1, 0);
-                            bias = _bias;
+                        if(definePos != null){
+                            if(codeNowPos == null) codeNowPos = new CodeData( line, row);
+                            else {
+                                codeNowPos.setLine(line);
+                                codeNowPos.setRow(row);
+                            }
+                            int l = line;
+                            int r = row;
+                            Console.WriteLine("a");
+                            line = definePos.getLine();
+                            row = definePos.getRow();
+                            row++;
+                            while(true){
+                                if(arg[definePos.getLine()].Length > row){
+                                    Code.Run(arg[definePos.getLine()].ToCharArray()[row], row , 0);
+
+                                }else{
+                                    break;
+                                }
+                            }
+//                            Console.WriteLine("times:"+i);
+                            line = l;
+                            row = r;
                         }else{
-                            fault( str, line, bias, "require !");
+                            fault( chars, line, row, "require !");
                         }
                         
                         break;
                         default:
-                        fault(str, line, bias, "0:default" );
+                        fault(chars, line, row, "0:default" );
                         break;
                     }
                 }
-                /*else if( _case == 1){
-                    switch(s){
-                        case '+':
-    //                    return (expect(str, index + 1, '+', '-'))? 1 + Code.Run(str, index + 1, 1) : 1;
-                        rsdr.Plus();
-                        if(expect(str, bias + 1, op)){
-                            Code.Run(str, bias + 1, 1);
-                        }
-                        break;
-                        case '-':
-    //                    return (expect(str, index + 1, '+', '-'))? -1 + Code.Run(str, index + 1, 1) : -1;
-                        rsdr.Minus();
-                        if(expect(str, bias + 1, op)){
-                            Code.Run(str, bias + 1, 1);
-                        }
-                        break;
-                        case '*':
-    //                    return (expect(str, index + 1, '+', '-'))? 1 + Code.Run(str, index + 1, 1) : 1;
-                        rsdr.Mult();
-                        if(expect(str, bias + 1, op)){
-                            Code.Run(str, bias + 1, 1);
-                        }
-                        break;
-                        case '/':
-    //                    return (expect(str, index + 1, '+', '-'))? -1 + Code.Run(str, index + 1, 1) : -1;
-                        rsdr.Div();
-                        if(expect(str, bias + 1, op)){
-                            Code.Run(str, bias + 1, 1);
-                        }
-                        break;
-                    }
-                }
-                else if( _case == 2){
-                    switch(s){
-                        case '+':
-    //                    return (expect(str, index + 1, '+', '-'))? 1 + Code.Run(str, index + 1, 1) : 1;
-                        rsdr.Set(1);
-                        if(expect(str, bias + 1, op)){
-                            Code.Run(str, bias + 1, 0);
-                        }
-                        break;
-                        case '-':
-    //                    return (expect(str, index + 1, '+', '-'))? -1 + Code.Run(str, index + 1, 1) : -1;
-                        rsdr.Set(-1);
-                        if(expect(str, bias + 1, op)){
-                            Code.Run(str, bias + 1, 0);
-                        }
-                        break;
-                        case '*':
-    //                    return (expect(str, index + 1, '+', '-'))? 1 + Code.Run(str, index + 1, 1) : 1;
-                        rsdr.Set(0);
-                        if(expect(str, bias + 1, op)){
-                            Code.Run(str, bias + 1, 0);
-                        }
-                        break;
-                        case '/':
-    //                    return (expect(str, index + 1, '+', '-'))? -1 + Code.Run(str, index + 1, 1) : -1;
-                        rsdr.Set(0);
-                        if(expect(str, bias + 1, op)){
-                            Code.Run(str, bias + 1, 0);
-                        }
-                        break;
-                    }
-                }*/
                 else{
                     successed = false;
                 }
-                if(successed == false) fault(str, line, bias, "not successed" );
-                Code.Run(str, bias + 1, 0);
+                if(successed == false) fault(chars, line, row, "not successed" );
 
                 
                 
             }else{
 //                Console.WriteLine("count"+loopPos.Count);
             }
-            if(index == 0){
-                line++;
-            }
+            
+            Code.setRow(Code.getRow() + 1);
         }
         return 0;
     }
+    public static int Run(char[] str, int index, int _case){
+    
+        return 0;
+    }
     private static string GetAlphabet(char[] str){
-        int pointer = bias;
+        int pointer = row;
         List<char> ret = new List<char>();
         for(;pointer < str.Length; pointer++){
             if(isAlphabet(str[pointer])) ret.Add(str[pointer]);
         }
         return new string(ret.ToArray());
+    }
+    public static int getLine(){
+        return line;
+    }public static int getRow(){
+        return row;
+    }public static void setLine(int l){
+        line = l;
+    }public static void setRow(int r){
+        row = r;
     }
     public static void SetArg(string[] argv){
         arg = argv;
